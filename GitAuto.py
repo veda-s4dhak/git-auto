@@ -25,7 +25,7 @@ class GitAuto:
 
         self.repos = kwargs["repos"]
 
-    def run_cmd(self, cmd):
+    def run_cmd(self, cmd, print_output=False):
 
         for repo in self.repos:
 
@@ -46,8 +46,16 @@ class GitAuto:
 
             if "fatal" in str(stderroutput):
                 print(f"Cmd: {cmd_str}| Repo: {repo_name} > {err}")
+            elif print_output:
+                print(f"Cmd: {cmd_str}| Repo: {repo_name} > {out}")
             else:
                 print(f"Cmd: {cmd_str}| Repo: {repo_name} > Success")
+
+    def status(self):
+        self.run_cmd(["git", "status"], print_output=True)
+
+    def branch(self):
+        self.run_cmd(["git", "branch", "--show-current"], print_output=True)
 
     def pull(self):
         self.run_cmd(["git", "pull"])
