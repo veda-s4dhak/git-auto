@@ -44,7 +44,7 @@ class GitAuto:
             out = str(stdoutput).replace('b"', '').replace('\\n"', '')
             err = str(stderroutput).replace('b"', '').replace('\\n"', '')
 
-            if "fatal" in str(stderroutput):
+            if "fatal" in str(stderroutput) or "warning" in str(stderroutput):
                 print(f"Cmd: {cmd_str}| Repo: {repo_name} > {err}")
             elif print_output:
                 print(f"Cmd: {cmd_str}| Repo: {repo_name} > {out}")
