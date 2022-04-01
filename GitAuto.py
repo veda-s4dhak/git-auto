@@ -6,7 +6,7 @@ Unauthorized copying of this file, via any medium is strictly prohibited
 Proprietary and confidential
 """
 
-__author__ = "Anish Agarwal"
+__author__ = "Veda Sadhak"
 __copyright__ = "Copyright 2021, Ronyn Wallets"
 __version__ = "0.0.2"
 
