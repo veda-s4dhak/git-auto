@@ -39,15 +39,15 @@ class GitAuto:
             process = subprocess.Popen(cmd, stdout=PIPE, stderr=PIPE)
             stdoutput, stderroutput = process.communicate()
 
-            out = str(stdoutput).replace('b"', '').replace('\\n"', '')
-            err = str(stderroutput).replace('b"', '').replace('\\n"', '')
+            out = str(stdoutput).replace("b'", "").replace('b"', '')#.replace('\\n"', '')
+            err = str(stderroutput).replace("b'", "").replace('b"', '')#.replace('\\n"', '')
 
             if "fatal" in str(stderroutput) or "warning" in str(stderroutput):
-                print(f"Cmd: {cmd_str}| Repo: {repo_name} > {err}")
+                print("Cmd: {}| Repo: {} > {}".format(cmd_str, repo_name, err), sep='\n')
             elif print_output:
-                print(f"Cmd: {cmd_str}| Repo: {repo_name} > {out}")
+                print("Cmd: {}| Repo: {} > {}".format(cmd_str, repo_name, out), sep='\n')
             else:
-                print(f"Cmd: {cmd_str}| Repo: {repo_name} > Success")
+                print("Cmd: {}| Repo: {} > Success".format(cmd_str, repo_name), sep='\n')
 
     def status(self):
         self.run_cmd(["git", "status"], print_output=True)
