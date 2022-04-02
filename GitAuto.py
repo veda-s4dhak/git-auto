@@ -1,14 +1,12 @@
 """
-Description: Generates include paths for eclipse project
+Description: Python wrapper for Git. Script Git to your delight...
 
-Copyright (C) Okane Labs, Inc. - All rights reserved
-Unauthorized copying of this file, via any medium is strictly prohibited
-Proprietary and confidential
+Aside: The G is predicting.
+
 """
 
 __author__ = "Veda Sadhak"
-__copyright__ = "Copyright 2021, Ronyn Wallets"
-__version__ = "0.0.2"
+__version__ = "2022.04.01"
 
 import os
 import pathlib
