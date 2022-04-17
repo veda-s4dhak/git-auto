@@ -67,14 +67,14 @@ class GitAuto:
     def push(self):
         self.run_cmd(["git", "push"])
 
-    def push_new(self, branch_name):
-        self.run_cmd(["git", "push", "--set-upstream", "origin", branch_name])
+    def push_new(self, branch):
+        self.run_cmd(["git", "push", "--set-upstream", "origin", branch])
 
-    def checkout_new(self, branch_name):
-        self.run_cmd(["git", "checkout", "-b", branch_name])
+    def checkout_new(self, branch):
+        self.run_cmd(["git", "checkout", "-b", branch])
 
-    def checkout(self, branch_name):
-        self.run_cmd(["git", "checkout", branch_name])
+    def checkout(self, branch):
+        self.run_cmd(["git", "checkout", branch])
 
     def tag(self, tag_name):
         self.run_cmd(["git", "tag", tag_name])
@@ -85,5 +85,8 @@ class GitAuto:
     def merge(self, branch_src):
         self.run_cmd(["git", "merge", branch_src])
 
-    def squash(self):
-        self.run_cmd(["git", "merge", "--squash"])
+    def num_commits(self, branch):
+        self.run_cmd(["git", "rev-list", "--count", "develop", f"^{branch}"], print_output=True)
+
+    def squash(self, num_commits):
+        self.run_cmd(["git", "rebase", "-i", f"HEAD~{num_commits}"])
