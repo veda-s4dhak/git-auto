@@ -84,3 +84,6 @@ class GitAuto:
 
     def merge(self, branch_src):
         self.run_cmd(["git", "merge", branch_src])
+
+    def squash(self):
+        self.run_cmd(["git", "merge", "--squash"])
