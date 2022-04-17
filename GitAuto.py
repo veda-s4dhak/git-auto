@@ -85,8 +85,8 @@ class GitAuto:
     def merge(self, branch_src):
         self.run_cmd(["git", "merge", branch_src])
 
-    def num_commits(self, branch):
-        self.run_cmd(["git", "rev-list", "--count", "develop", f"^{branch}"], print_output=True)
+    def num_commits(self, branch, target):
+        self.run_cmd(["git", "rev-list", "--count", branch, f"^{target}"], print_output=True)
 
     def squash(self, num_commits):
         self.run_cmd(["git", "rebase", "-i", f"HEAD~{num_commits}"])
