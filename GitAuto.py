@@ -36,6 +36,10 @@ class GitAuto:
             for param in cmd:
                 cmd_str += param + " "
 
+            cmd_str_print = cmd_str
+            if "commit" in cmd_str:
+                cmd_str_print = "git commit -m release_notes.txt"
+
             process = subprocess.Popen(cmd, stdout=PIPE, stderr=PIPE)
             stdoutput, stderroutput = process.communicate()
 
@@ -52,17 +56,17 @@ class GitAuto:
                     err.append(line)
 
             if "fatal" in str(stderroutput) or "warning" in str(stderroutput):
-                print("Cmd: {}| Repo: {} >\n".format(cmd_str, repo_name), sep='\n')
+                print("Cmd: {}| Repo: {} >\n".format(cmd_str_print, repo_name), sep='\n')
                 for line in err:
                     print(f"    {line}")
                 print("")
             elif print_output:
-                print("Cmd: {}| Repo: {} >\n".format(cmd_str, repo_name), sep='\n')
+                print("Cmd: {}| Repo: {} >\n".format(cmd_str_print, repo_name), sep='\n')
                 for line in out:
                     print(f"    {line}")
                 print("")
             else:
-                print("Cmd: {}| Repo: {} > Success".format(cmd_str, repo_name), sep='\n')
+                print("Cmd: {}| Repo: {} > Success".format(cmd_str_print, repo_name), sep='\n')
 
     def status(self):
         self.run_cmd(["git", "status"], print_output=True)
