@@ -39,13 +39,28 @@ class GitAuto:
             process = subprocess.Popen(cmd, stdout=PIPE, stderr=PIPE)
             stdoutput, stderroutput = process.communicate()
 
-            out = str(stdoutput).replace("b'", "").replace('b"', '')#.replace('\\n"', '')
-            err = str(stderroutput).replace("b'", "").replace('b"', '')#.replace('\\n"', '')
+            out_raw= str(stdoutput).replace("b'", "").replace('b"', '').replace("'", "").replace('"', '').replace("\\t", "")
+            out = []
+            for line in out_raw.split("\\n"):
+                if line != "":
+                    out.append(line)
+
+            err_raw = str(stderroutput).replace("b'", "").replace('b"', '').replace("'", "").replace('"', '').replace("\\t", "")
+            err = []
+            for line in err_raw.split("\\n"):
+                if line != "":
+                    err.append(line)
 
             if "fatal" in str(stderroutput) or "warning" in str(stderroutput):
-                print("Cmd: {}| Repo: {} > {}".format(cmd_str, repo_name, err), sep='\n')
+                print("Cmd: {}| Repo: {} >\n".format(cmd_str, repo_name), sep='\n')
+                for line in err:
+                    print(f"    {line}")
+                print("")
             elif print_output:
-                print("Cmd: {}| Repo: {} > {}".format(cmd_str, repo_name, out), sep='\n')
+                print("Cmd: {}| Repo: {} >\n".format(cmd_str, repo_name), sep='\n')
+                for line in out:
+                    print(f"    {line}")
+                print("")
             else:
                 print("Cmd: {}| Repo: {} > Success".format(cmd_str, repo_name), sep='\n')
 
@@ -86,7 +101,7 @@ class GitAuto:
         self.run_cmd(["git", "merge", branch_src])
 
     def num_commits(self, branch, target):
-        self.run_cmd(["git", "rev-list", "--count", branch, f"^{target}"], print_output=True)
+        self.run_cmd(["git", "rev-list", "--count", branch, f"^origin/{target}"], print_output=True)
 
     def squash(self, num_commits):
         self.run_cmd(["git", "rebase", "-i", f"HEAD~{num_commits}"])
