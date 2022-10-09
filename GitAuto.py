@@ -36,18 +36,37 @@ class GitAuto:
             for param in cmd:
                 cmd_str += param + " "
 
+            cmd_str_print = cmd_str
+            if "commit" in cmd_str:
+                cmd_str_print = "git commit -m release_notes.txt"
+
             process = subprocess.Popen(cmd, stdout=PIPE, stderr=PIPE)
             stdoutput, stderroutput = process.communicate()
 
-            out = str(stdoutput).replace('b"', '').replace('\\n"', '')
-            err = str(stderroutput).replace('b"', '').replace('\\n"', '')
+            out_raw= str(stdoutput).replace("b'", "").replace('b"', '').replace("'", "").replace('"', '').replace("\\t", "")
+            out = []
+            for line in out_raw.split("\\n"):
+                if line != "":
+                    out.append(line)
+
+            err_raw = str(stderroutput).replace("b'", "").replace('b"', '').replace("'", "").replace('"', '').replace("\\t", "")
+            err = []
+            for line in err_raw.split("\\n"):
+                if line != "":
+                    err.append(line)
 
             if "fatal" in str(stderroutput) or "warning" in str(stderroutput):
-                print(f"Cmd: {cmd_str}| Repo: {repo_name} > {err}")
+                print("Cmd: {}| Repo: {} >\n".format(cmd_str_print, repo_name), sep='\n')
+                for line in err:
+                    print(f"    {line}")
+                print("")
             elif print_output:
-                print(f"Cmd: {cmd_str}| Repo: {repo_name} > {out}")
+                print("Cmd: {}| Repo: {} >\n".format(cmd_str_print, repo_name), sep='\n')
+                for line in out:
+                    print(f"    {line}")
+                print("")
             else:
-                print(f"Cmd: {cmd_str}| Repo: {repo_name} > Success")
+                print("Cmd: {}| Repo: {} > Success".format(cmd_str_print, repo_name), sep='\n')
 
     def status(self):
         self.run_cmd(["git", "status"], print_output=True)
@@ -67,14 +86,14 @@ class GitAuto:
     def push(self):
         self.run_cmd(["git", "push"])
 
-    def push_new(self, branch_name):
-        self.run_cmd(["git", "push", "--set-upstream", "origin", branch_name])
+    def push_new(self, branch):
+        self.run_cmd(["git", "push", "--set-upstream", "origin", branch])
 
-    def checkout_new(self, branch_name):
-        self.run_cmd(["git", "checkout", "-b", branch_name])
+    def checkout_new(self, branch):
+        self.run_cmd(["git", "checkout", "-b", branch])
 
-    def checkout(self, branch_name):
-        self.run_cmd(["git", "checkout", branch_name])
+    def checkout(self, branch):
+        self.run_cmd(["git", "checkout", branch])
 
     def tag(self, tag_name):
         self.run_cmd(["git", "tag", tag_name])
@@ -84,3 +103,9 @@ class GitAuto:
 
     def merge(self, branch_src):
         self.run_cmd(["git", "merge", branch_src])
+
+    def num_commits(self, branch, target):
+        self.run_cmd(["git", "rev-list", "--count", branch, f"^origin/{target}"], print_output=True)
+
+    def squash(self, num_commits):
+        self.run_cmd(["git", "rebase", "-i", f"HEAD~{num_commits}"])
